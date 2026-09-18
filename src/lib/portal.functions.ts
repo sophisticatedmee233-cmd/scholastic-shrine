@@ -40,7 +40,8 @@ export const getMyProfile = createServerFn({ method: "GET" })
     const fullName =
       (meta.user_metadata?.["full_name"] as string | undefined) ||
       (meta.user_metadata?.["name"] as string | undefined) ||
-      (meta.email ? meta.email.split("@")[0] : "Student");
+      (meta.email ? meta.email.split("@")[0] : undefined) ||
+      "Student";
     const admission = `LTS/2026/${String(Math.floor(1000 + Math.random() * 9000))}`;
 
     const { data: created, error: insertError } = await supabase

@@ -74,7 +74,7 @@ function AboutPage() {
               {leaders.map((l) => (
                 <li key={l.name} className="flex items-center gap-4 py-4">
                   <div className="grid size-11 place-items-center rounded-full bg-brand font-display font-semibold text-cream">
-                    {l.name.split(" ").slice(-1)[0][0]}
+                    {(l.name.split(" ").slice(-1)[0] ?? l.name).charAt(0)}
                   </div>
                   <div>
                     <p className="font-semibold text-ink">{l.name}</p>

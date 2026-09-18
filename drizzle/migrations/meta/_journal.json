@@ -8,6 +8,27 @@
       "when": 1789659638334,
       "tag": "0000_school_portal_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789723819603,
+      "tag": "0001_add_parent_role",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789723836251,
+      "tag": "0002_parent_links_and_admin_policies",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789723856603,
+      "tag": "0003_parent_contact_columns",
+      "breakpoints": true
     }
   ]
 }

@@ -140,6 +140,36 @@ export type Database = {
         }
         Relationships: []
       }
+      parent_students: {
+        Row: {
+          created_at: string
+          id: string
+          parent_email: string
+          parent_id: string
+          parent_name: string
+          relationship: string
+          student_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          parent_email?: string
+          parent_id: string
+          parent_name?: string
+          relationship?: string
+          student_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          parent_email?: string
+          parent_id?: string
+          parent_name?: string
+          relationship?: string
+          student_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           admission_number: string | null
@@ -230,9 +260,13 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_parent_of: {
+        Args: { _parent_id: string; _student_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      app_role: "admin" | "teacher" | "student"
+      app_role: "admin" | "teacher" | "student" | "parent"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -360,7 +394,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "teacher", "student"],
+      app_role: ["admin", "teacher", "student", "parent"],
     },
   },
 } as const

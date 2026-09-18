@@ -19,6 +19,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated/portal'
 import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenticated/portal.index'
+import { Route as AuthenticatedPortalAdminRouteImport } from './routes/_authenticated/portal.admin'
 import { Route as AuthenticatedPortalAnnouncementsRouteImport } from './routes/_authenticated/portal.announcements'
 import { Route as AuthenticatedPortalFeesRouteImport } from './routes/_authenticated/portal.fees'
 import { Route as AuthenticatedPortalGradesRouteImport } from './routes/_authenticated/portal.grades'
@@ -74,6 +75,12 @@ const AuthenticatedPortalIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedPortalRoute,
   } as any)
+const AuthenticatedPortalAdminRoute =
+  AuthenticatedPortalAdminRouteImport.update({
+    id: '/admin',
+    path: '/admin',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
 const AuthenticatedPortalAnnouncementsRoute =
   AuthenticatedPortalAnnouncementsRouteImport.update({
     id: '/announcements',
@@ -107,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/news': typeof NewsRoute
   '/portal': typeof AuthenticatedPortalRouteWithChildren
+  '/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
   '/portal/fees': typeof AuthenticatedPortalFeesRoute
   '/portal/grades': typeof AuthenticatedPortalGradesRoute
@@ -121,6 +129,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/news': typeof NewsRoute
+  '/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
   '/portal/fees': typeof AuthenticatedPortalFeesRoute
   '/portal/grades': typeof AuthenticatedPortalGradesRoute
@@ -138,6 +147,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/news': typeof NewsRoute
   '/_authenticated/portal': typeof AuthenticatedPortalRouteWithChildren
+  '/_authenticated/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/_authenticated/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
   '/_authenticated/portal/fees': typeof AuthenticatedPortalFeesRoute
   '/_authenticated/portal/grades': typeof AuthenticatedPortalGradesRoute
@@ -155,6 +165,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/news'
     | '/portal'
+    | '/portal/admin'
     | '/portal/announcements'
     | '/portal/fees'
     | '/portal/grades'
@@ -169,6 +180,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/news'
+    | '/portal/admin'
     | '/portal/announcements'
     | '/portal/fees'
     | '/portal/grades'
@@ -185,6 +197,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/news'
     | '/_authenticated/portal'
+    | '/_authenticated/portal/admin'
     | '/_authenticated/portal/announcements'
     | '/_authenticated/portal/fees'
     | '/_authenticated/portal/grades'
@@ -275,6 +288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortalIndexRouteImport
       parentRoute: typeof AuthenticatedPortalRoute
     }
+    '/_authenticated/portal/admin': {
+      id: '/_authenticated/portal/admin'
+      path: '/admin'
+      fullPath: '/portal/admin'
+      preLoaderRoute: typeof AuthenticatedPortalAdminRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
     '/_authenticated/portal/announcements': {
       id: '/_authenticated/portal/announcements'
       path: '/announcements'
@@ -307,6 +327,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedPortalRouteChildren {
+  AuthenticatedPortalAdminRoute: typeof AuthenticatedPortalAdminRoute
   AuthenticatedPortalAnnouncementsRoute: typeof AuthenticatedPortalAnnouncementsRoute
   AuthenticatedPortalFeesRoute: typeof AuthenticatedPortalFeesRoute
   AuthenticatedPortalGradesRoute: typeof AuthenticatedPortalGradesRoute
@@ -315,6 +336,7 @@ interface AuthenticatedPortalRouteChildren {
 }
 
 const AuthenticatedPortalRouteChildren: AuthenticatedPortalRouteChildren = {
+  AuthenticatedPortalAdminRoute: AuthenticatedPortalAdminRoute,
   AuthenticatedPortalAnnouncementsRoute: AuthenticatedPortalAnnouncementsRoute,
   AuthenticatedPortalFeesRoute: AuthenticatedPortalFeesRoute,
   AuthenticatedPortalGradesRoute: AuthenticatedPortalGradesRoute,

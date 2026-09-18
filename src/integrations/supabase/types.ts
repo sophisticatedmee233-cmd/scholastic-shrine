@@ -144,21 +144,27 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          parent_email: string
           parent_id: string
+          parent_name: string
           relationship: string
           student_id: string
         }
         Insert: {
           created_at?: string
           id?: string
+          parent_email?: string
           parent_id: string
+          parent_name?: string
           relationship?: string
           student_id: string
         }
         Update: {
           created_at?: string
           id?: string
+          parent_email?: string
           parent_id?: string
+          parent_name?: string
           relationship?: string
           student_id?: string
         }

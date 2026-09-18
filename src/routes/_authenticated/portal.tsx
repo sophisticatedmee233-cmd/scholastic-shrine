@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_authenticated/portal")({
 });
 
 const tabs = [
-  { to: "/portal", label: "Overview", exact: true },
+  { to: "/portal", label: "Overview" },
   { to: "/portal/grades", label: "Grades" },
   { to: "/portal/timetable", label: "Timetable" },
   { to: "/portal/fees", label: "Fees" },
@@ -62,7 +62,7 @@ function PortalLayout() {
             <Link
               key={t.to}
               to={t.to}
-              activeOptions={{ exact: "exact" in t }}
+              activeOptions={{ exact: t.to === "/portal" }}
               className="whitespace-nowrap rounded-t-lg px-4 py-3 text-sm font-medium text-ink/60 hover:text-brand"
               activeProps={{ className: "text-brand border-b-2 border-brand" }}
             >

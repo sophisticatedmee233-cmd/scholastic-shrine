@@ -29,6 +29,13 @@
       "when": 1789723856603,
       "tag": "0003_parent_contact_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789981349853,
+      "tag": "0004_grant_owner_admin_role",
+      "breakpoints": true
     }
   ]
 }

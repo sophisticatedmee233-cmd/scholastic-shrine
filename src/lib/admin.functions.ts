@@ -277,3 +277,73 @@ export const adminDeleteParentLink = createServerFn({ method: "POST" })
     if (error) throw error;
     return { ok: true };
   });
+
+/* ---------------- Accounts ---------------- */
+
+export type AccountRow = {
+  id: string;
+  email: string;
+  full_name: string;
+  roles: string[];
+  last_sign_in_at: string | null;
+  created_at: string;
+};
+
+/** All portal logins with their roles. Passwords are hashed by the auth system and can never be read. */
+export const adminListAccounts = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<AccountRow[]> => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: list, error } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+    if (error) throw error;
+    const { data: roles } = await supabaseAdmin.from("user_roles").select("user_id, role");
+    const { data: profiles } = await supabaseAdmin.from("profiles").select("id, full_name");
+    return (list?.users ?? []).map((u) => ({
+      id: u.id,
+      email: u.email ?? "",
+      full_name:
+        profiles?.find((p) => p.id === u.id)?.full_name ||
+        (u.user_metadata?.["full_name"] as string | undefined) ||
+        "",
+      roles: (roles ?? []).filter((r) => r.user_id === u.id).map((r) => String(r.role)),
+      last_sign_in_at: u.last_sign_in_at ?? null,
+      created_at: u.created_at,
+    }));
+  });
+
+/** Set a new password for any account (admins cannot read existing passwords). */
+export const adminSetPassword = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { userId: string; password: string }) => d)
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    if (data.password.length < 6) throw new Error("Password must be at least 6 characters");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(data.userId, { password: data.password });
+    if (error) throw error;
+    return { ok: true };
+  });
+
+/** Grant or revoke a role on an account. */
+export const adminSetRole = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { userId: string; role: "admin" | "teacher" | "student" | "parent"; grant: boolean }) => d)
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    if (data.grant) {
+      const { error } = await supabaseAdmin
+        .from("user_roles")
+        .upsert({ user_id: data.userId, role: data.role }, { onConflict: "user_id,role" });
+      if (error) throw error;
+    } else {
+      const { error } = await supabaseAdmin
+        .from("user_roles")
+        .delete()
+        .eq("user_id", data.userId)
+        .eq("role", data.role);
+      if (error) throw error;
+    }
+    return { ok: true };
+  });

@@ -264,7 +264,7 @@ function GradesPanel() {
           className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
           onSubmit={(e: FormEvent) => {
             e.preventDefault();
-            if (!studentId) return toast.error("Choose a learner first");
+            if (!studentId) { toast.error("Choose a learner first"); return; }
             save.mutate();
           }}
         >
@@ -383,7 +383,7 @@ function FeesPanel() {
           className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
           onSubmit={(e: FormEvent) => {
             e.preventDefault();
-            if (!studentId) return toast.error("Choose a learner first");
+            if (!studentId) { toast.error("Choose a learner first"); return; }
             addInvoice.mutate();
           }}
         >
@@ -417,7 +417,7 @@ function FeesPanel() {
           className="grid gap-4 sm:grid-cols-3"
           onSubmit={(e: FormEvent) => {
             e.preventDefault();
-            if (!studentId) return toast.error("Choose a learner first");
+            if (!studentId) { toast.error("Choose a learner first"); return; }
             addPayment.mutate();
           }}
         >
@@ -586,7 +586,7 @@ function ParentsPanel() {
           className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
           onSubmit={(e: FormEvent) => {
             e.preventDefault();
-            if (!form.student_id) return toast.error("Choose a learner first");
+            if (!form.student_id) { toast.error("Choose a learner first"); return; }
             create.mutate();
           }}
         >

@@ -64,7 +64,7 @@ function PortalLayout() {
           </div>
         </div>
         <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-3 md:px-4">
-          {tabs.map((t) => (
+          {[...tabs, ...extraTabs].map((t) => (
             <Link
               key={t.to}
               to={t.to}

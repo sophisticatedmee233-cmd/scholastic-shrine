@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { profileQuery } from "@/lib/portal.queries";
+import { accessQuery } from "@/lib/admin.queries";
 import { supabase } from "@/integrations/supabase/client";
 import { Crest } from "@/components/site/Crest";
 
@@ -27,7 +28,12 @@ const tabs = [
 
 function PortalLayout() {
   const { data: profile } = useQuery(profileQuery);
+  const { data: access } = useQuery(accessQuery);
   const navigate = useNavigate();
+  const extraTabs = [
+    ...(access?.childCount ? ([{ to: "/portal/family", label: "My Children" }] as const) : []),
+    ...(access?.isAdmin ? ([{ to: "/portal/admin", label: "Admin" }] as const) : []),
+  ];
 
   return (
     <div className="min-h-screen bg-paper">

@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { adminListFees, adminListGrades, adminListParentLinks, adminListStudents, getMyAccess } from "./admin.functions";
+import { adminListAccounts, adminListFees, adminListGrades, adminListParentLinks, adminListStudents, getMyAccess } from "./admin.functions";
 import { getChildRecords, getMyChildren, getMyGuardians } from "./parent.functions";
 
 export const accessQuery = queryOptions({
@@ -47,3 +47,8 @@ export const childRecordsQuery = (studentId: string) =>
     queryFn: () => getChildRecords({ data: { studentId } }),
     enabled: Boolean(studentId),
   });
+
+export const adminAccountsQuery = queryOptions({
+  queryKey: ["admin", "accounts"],
+  queryFn: () => adminListAccounts(),
+});

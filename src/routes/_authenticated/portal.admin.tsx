@@ -6,6 +6,7 @@ import {
   accessQuery,
   adminFeesQuery,
   adminGradesQuery,
+  adminAccountsQuery,
   adminParentLinksQuery,
   adminStudentsQuery,
 } from "@/lib/admin.queries";
@@ -20,6 +21,8 @@ import {
   adminDeleteParentLink,
   adminSaveAnnouncement,
   adminSaveGrade,
+  adminSetPassword,
+  adminSetRole,
   adminUpdateStudent,
 } from "@/lib/admin.functions";
 import { announcementsQuery, formatDate, formatKES } from "@/lib/portal.queries";
@@ -28,7 +31,7 @@ export const Route = createFileRoute("/_authenticated/portal/admin")({
   component: AdminDashboard,
 });
 
-const TABS = ["Students", "Grades", "Fees", "Announcements", "Parents"] as const;
+const TABS = ["Students", "Grades", "Fees", "Announcements", "Parents", "Accounts"] as const;
 type Tab = (typeof TABS)[number];
 
 function AdminDashboard() {
@@ -75,6 +78,7 @@ function AdminDashboard() {
       {tab === "Fees" && <FeesPanel />}
       {tab === "Announcements" && <AnnouncementsPanel />}
       {tab === "Parents" && <ParentsPanel />}
+      {tab === "Accounts" && <AccountsPanel />}
     </div>
   );
 }
@@ -264,7 +268,7 @@ function GradesPanel() {
           className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
           onSubmit={(e: FormEvent) => {
             e.preventDefault();
-            if (!studentId) return toast.error("Choose a learner first");
+            if (!studentId) { toast.error("Choose a learner first"); return; }
             save.mutate();
           }}
         >
@@ -383,7 +387,7 @@ function FeesPanel() {
           className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
           onSubmit={(e: FormEvent) => {
             e.preventDefault();
-            if (!studentId) return toast.error("Choose a learner first");
+            if (!studentId) { toast.error("Choose a learner first"); return; }
             addInvoice.mutate();
           }}
         >
@@ -417,7 +421,7 @@ function FeesPanel() {
           className="grid gap-4 sm:grid-cols-3"
           onSubmit={(e: FormEvent) => {
             e.preventDefault();
-            if (!studentId) return toast.error("Choose a learner first");
+            if (!studentId) { toast.error("Choose a learner first"); return; }
             addPayment.mutate();
           }}
         >
@@ -586,7 +590,7 @@ function ParentsPanel() {
           className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
           onSubmit={(e: FormEvent) => {
             e.preventDefault();
-            if (!form.student_id) return toast.error("Choose a learner first");
+            if (!form.student_id) { toast.error("Choose a learner first"); return; }
             create.mutate();
           }}
         >
@@ -625,6 +629,90 @@ function ParentsPanel() {
             </li>
           ))}
           {!links?.length && <p className="text-sm text-ink/60">No parents linked yet.</p>}
+        </ul>
+      </Panel>
+    </div>
+  );
+}
+
+/* ---------- accounts ---------- */
+
+const ROLES = ["admin", "teacher", "student", "parent"] as const;
+
+function AccountsPanel() {
+  const { data: accounts } = useQuery(adminAccountsQuery);
+  const refresh = useRefresh();
+  const [pw, setPw] = useState<Record<string, string>>({});
+
+  const setPassword = useMutation({
+    mutationFn: (v: { userId: string; password: string }) => adminSetPassword({ data: v }),
+    onSuccess: (_d, v) => {
+      toast.success("Password updated");
+      setPw((p) => ({ ...p, [v.userId]: "" }));
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const setRole = useMutation({
+    mutationFn: (v: { userId: string; role: (typeof ROLES)[number]; grant: boolean }) => adminSetRole({ data: v }),
+    onSuccess: () => refresh([["admin", "accounts"]]),
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  return (
+    <div className="space-y-6">
+      <Panel title="All portal logins">
+        <p className="mb-4 text-xs text-ink/50">
+          Passwords are stored encrypted and cannot be displayed to anyone, including administrators. Set a new
+          password below and share it with the account holder.
+        </p>
+        <ul className="divide-y divide-border">
+          {(accounts ?? []).map((a) => (
+            <li key={a.id} className="space-y-3 py-4">
+              <div>
+                <p className="text-sm font-semibold text-ink">{a.full_name || "No name"}</p>
+                <p className="text-xs text-ink/60">{a.email}</p>
+                <p className="text-xs text-ink/40">
+                  Joined {formatDate(a.created_at)} · Last sign in {a.last_sign_in_at ? formatDate(a.last_sign_in_at) : "never"}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {ROLES.map((r) => {
+                  const has = a.roles.includes(r);
+                  return (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setRole.mutate({ userId: a.id, role: r, grant: !has })}
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${
+                        has ? "bg-brand text-cream" : "border border-border text-ink/60"
+                      }`}
+                    >
+                      {r}
+                    </button>
+                  );
+                })}
+              </div>
+              <form
+                className="flex flex-wrap items-center gap-2"
+                onSubmit={(e: FormEvent) => {
+                  e.preventDefault();
+                  setPassword.mutate({ userId: a.id, password: pw[a.id] ?? "" });
+                }}
+              >
+                <input
+                  required
+                  minLength={6}
+                  placeholder="New password"
+                  className={inputClass + " max-w-xs"}
+                  value={pw[a.id] ?? ""}
+                  onChange={(e) => setPw((p) => ({ ...p, [a.id]: e.target.value }))}
+                />
+                <SubmitButton busy={setPassword.isPending}>Reset password</SubmitButton>
+              </form>
+            </li>
+          ))}
+          {!accounts?.length && <p className="text-sm text-ink/60">No accounts yet.</p>}
         </ul>
       </Panel>
     </div>

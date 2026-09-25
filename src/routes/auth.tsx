@@ -94,7 +94,7 @@ function AuthPage() {
               Sign in with your school email. New learners can create an account and their class records will be linked by the office.
             </p>
           </div>
-          <p className="text-xs text-cream/50">Need help? Contact the ICT desk · ict@limurutown.ac.ke</p>
+          <p className="text-xs text-cream/50">Need help? Contact the ICT desk · ict@limurutown.ac.ke · <Link to="/admin" className="underline">Administrator sign-in</Link></p>
         </div>
       </section>
 

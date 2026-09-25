@@ -44,6 +44,48 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_email: string
+          actor_id: string | null
+          category: string
+          created_at: string
+          details: Json
+          id: string
+          ip_address: string
+          target_id: string | null
+          target_label: string
+          user_agent: string
+        }
+        Insert: {
+          action: string
+          actor_email?: string
+          actor_id?: string | null
+          category?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          ip_address?: string
+          target_id?: string | null
+          target_label?: string
+          user_agent?: string
+        }
+        Update: {
+          action?: string
+          actor_email?: string
+          actor_id?: string | null
+          category?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          ip_address?: string
+          target_id?: string | null
+          target_label?: string
+          user_agent?: string
+        }
+        Relationships: []
+      }
       fee_invoices: {
         Row: {
           amount: number

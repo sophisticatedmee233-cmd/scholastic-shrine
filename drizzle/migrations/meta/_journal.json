@@ -36,6 +36,13 @@
       "when": 1789981349853,
       "tag": "0004_grant_owner_admin_role",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790341222997,
+      "tag": "0005_security_audit_log",
+      "breakpoints": true
     }
   ]
 }

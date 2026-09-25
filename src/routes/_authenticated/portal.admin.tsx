@@ -26,12 +26,80 @@ import {
   adminUpdateStudent,
 } from "@/lib/admin.functions";
 import { announcementsQuery, formatDate, formatKES } from "@/lib/portal.queries";
+import { adminListAuditLogs } from "@/lib/audit.functions";
+
+const AUDIT_CATEGORIES = ["all", "auth", "roles", "accounts", "students", "grades", "fees", "parents"] as const;
+
+function AuditPanel() {
+  const [category, setCategory] = useState<string>("all");
+  const { data: rows, isLoading } = useQuery({
+    queryKey: ["admin", "audit", category],
+    queryFn: () => adminListAuditLogs({ data: { category } }),
+  });
+  const { data: students } = useQuery(adminStudentsQuery);
+  const nameOf = (id: string | null) => (id ? students?.find((s) => s.id === id)?.full_name : undefined);
+
+  return (
+    <Panel title="Security audit log">
+      <div className="mb-4 flex flex-wrap gap-2">
+        {AUDIT_CATEGORIES.map((c) => (
+          <button
+            key={c}
+            type="button"
+            onClick={() => setCategory(c)}
+            className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${
+              category === c ? "bg-brand text-cream" : "border border-border text-ink/70 hover:text-brand"
+            }`}
+          >
+            {c}
+          </button>
+        ))}
+      </div>
+      {isLoading ? (
+        <p className="text-sm text-ink/60">Loading…</p>
+      ) : !rows?.length ? (
+        <p className="text-sm text-ink/60">No events recorded yet.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="text-xs uppercase text-ink/50">
+              <tr>
+                <th className="py-2 pr-4">When</th>
+                <th className="py-2 pr-4">Event</th>
+                <th className="py-2 pr-4">By</th>
+                <th className="py-2 pr-4">Target</th>
+                <th className="py-2 pr-4">Details</th>
+                <th className="py-2">IP</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.id} className="border-t border-border align-top">
+                  <td className="py-2 pr-4 whitespace-nowrap text-ink/70">{new Date(r.created_at).toLocaleString("en-KE")}</td>
+                  <td className={`py-2 pr-4 font-medium ${r.action === "sign_in_failed" ? "text-destructive" : "text-ink"}`}>
+                    {r.action.replace(/_/g, " ")}
+                  </td>
+                  <td className="py-2 pr-4 text-ink/70">{r.actor_email || "—"}</td>
+                  <td className="py-2 pr-4 text-ink/70">{r.target_label || nameOf(r.target_id) || (r.target_id ? r.target_id.slice(0, 8) : "—")}</td>
+                  <td className="py-2 pr-4 text-xs text-ink/60">
+                    {Object.entries((r.details ?? {}) as Record<string, unknown>).map(([k, v]) => `${k}: ${String(v)}`).join(" · ") || "—"}
+                  </td>
+                  <td className="py-2 text-xs text-ink/50">{r.ip_address || "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Panel>
+  );
+}
 
 export const Route = createFileRoute("/_authenticated/portal/admin")({
   component: AdminDashboard,
 });
 
-const TABS = ["Students", "Grades", "Fees", "Announcements", "Parents", "Accounts"] as const;
+const TABS = ["Students", "Grades", "Fees", "Announcements", "Parents", "Accounts", "Audit log"] as const;
 type Tab = (typeof TABS)[number];
 
 function AdminDashboard() {
@@ -79,6 +147,7 @@ function AdminDashboard() {
       {tab === "Announcements" && <AnnouncementsPanel />}
       {tab === "Parents" && <ParentsPanel />}
       {tab === "Accounts" && <AccountsPanel />}
+      {tab === "Audit log" && <AuditPanel />}
     </div>
   );
 }

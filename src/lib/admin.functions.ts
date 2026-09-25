@@ -16,6 +16,11 @@ async function assertAdmin(context: Ctx) {
   if (!data) throw new Error("Forbidden: admin access required");
 }
 
+async function audit(context: Ctx, e: Omit<import("./audit.server").AuditEntry, "actorId">) {
+  const { writeAudit } = await import("./audit.server");
+  await writeAudit({ actorId: context.userId, ...e });
+}
+
 /** Whether the signed-in user is an admin and/or a linked parent. */
 export const getMyAccess = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -67,6 +72,7 @@ export const adminCreateStudent = createServerFn({ method: "POST" })
       admission_number: data.admission_number || null,
     });
     if (pErr) throw pErr;
+    await audit(context, { action: "student_created", category: "students", targetId: id, targetLabel: data.full_name, details: { email: data.email, class_name: data.class_name } });
     return { id };
   });
 
@@ -85,6 +91,7 @@ export const adminUpdateStudent = createServerFn({ method: "POST" })
       })
       .eq("id", data.id);
     if (error) throw error;
+    await audit(context, { action: "student_updated", category: "students", targetId: data.id, targetLabel: data.full_name, details: { class_name: data.class_name, stream: data.stream } });
     return { ok: true };
   });
 
@@ -121,6 +128,7 @@ export const adminSaveGrade = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { error } = await context.supabase.from("grades").insert(data);
     if (error) throw error;
+    await audit(context, { action: "grade_recorded", category: "grades", targetId: data.student_id, details: { subject: data.subject, term: data.term, year: data.year, score: data.score, grade: data.grade } });
     return { ok: true };
   });
 
@@ -129,8 +137,10 @@ export const adminDeleteGrade = createServerFn({ method: "POST" })
   .inputValidator((d: { id: string }) => d)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
+    const { data: old } = await context.supabase.from("grades").select("*").eq("id", data.id).maybeSingle();
     const { error } = await context.supabase.from("grades").delete().eq("id", data.id);
     if (error) throw error;
+    await audit(context, { action: "grade_deleted", category: "grades", targetId: old?.student_id ?? null, details: old ? { subject: old.subject, term: old.term, year: old.year, score: old.score } : { id: data.id } });
     return { ok: true };
   });
 
@@ -157,6 +167,7 @@ export const adminAddInvoice = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { error } = await context.supabase.from("fee_invoices").insert(data);
     if (error) throw error;
+    await audit(context, { action: "invoice_added", category: "fees", targetId: data.student_id, details: { description: data.description, amount: data.amount } });
     return { ok: true };
   });
 
@@ -167,6 +178,7 @@ export const adminAddPayment = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { error } = await context.supabase.from("fee_payments").insert(data);
     if (error) throw error;
+    await audit(context, { action: "payment_recorded", category: "fees", targetId: data.student_id, details: { amount: data.amount, method: data.method, reference: data.reference } });
     return { ok: true };
   });
 
@@ -176,8 +188,10 @@ export const adminDeleteFeeRow = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const table = data.kind === "invoice" ? "fee_invoices" : "fee_payments";
+    const { data: old } = await context.supabase.from(table).select("student_id, amount").eq("id", data.id).maybeSingle();
     const { error } = await context.supabase.from(table).delete().eq("id", data.id);
     if (error) throw error;
+    await audit(context, { action: `${data.kind}_deleted`, category: "fees", targetId: old?.student_id ?? null, details: { amount: old?.amount ?? null } });
     return { ok: true };
   });
 
@@ -265,6 +279,7 @@ export const adminCreateParent = createServerFn({ method: "POST" })
       { onConflict: "parent_id,student_id" },
     );
     if (linkErr) throw linkErr;
+    await audit(context, { action: existing ? "parent_linked" : "parent_created", category: "parents", targetId: parentId, targetLabel: data.email, details: { student_id: data.student_id, relationship: data.relationship } });
     return { ok: true, reused: Boolean(existing) };
   });
 
@@ -273,8 +288,10 @@ export const adminDeleteParentLink = createServerFn({ method: "POST" })
   .inputValidator((d: { id: string }) => d)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
+    const { data: old } = await context.supabase.from("parent_students").select("*").eq("id", data.id).maybeSingle();
     const { error } = await context.supabase.from("parent_students").delete().eq("id", data.id);
     if (error) throw error;
+    await audit(context, { action: "parent_unlinked", category: "parents", targetId: old?.parent_id ?? null, targetLabel: old?.parent_email ?? "", details: { student_id: old?.student_id ?? null } });
     return { ok: true };
   });
 
@@ -322,6 +339,7 @@ export const adminSetPassword = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.auth.admin.updateUserById(data.userId, { password: data.password });
     if (error) throw error;
+    await audit(context, { action: "password_reset", category: "accounts", targetId: data.userId });
     return { ok: true };
   });
 
@@ -345,5 +363,6 @@ export const adminSetRole = createServerFn({ method: "POST" })
         .eq("role", data.role);
       if (error) throw error;
     }
+    await audit(context, { action: data.grant ? "role_granted" : "role_revoked", category: "roles", targetId: data.userId, details: { role: data.role } });
     return { ok: true };
   });

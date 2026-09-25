@@ -3,6 +3,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import { logFailedSignIn, logSignIn } from "@/lib/audit.functions";
 import { Crest } from "@/components/site/Crest";
 
 export const Route = createFileRoute("/auth")({
@@ -38,7 +39,11 @@ function AuthPage() {
     try {
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        if (error) {
+          logFailedSignIn({ data: { email, reason: error.message } }).catch(() => {});
+          throw error;
+        }
+        await logSignIn({ data: { method: "password" } }).catch(() => {});
         navigate({ to: "/portal", replace: true });
       } else {
         const { data, error } = await supabase.auth.signUp({
@@ -61,11 +66,13 @@ function AuthPage() {
     setBusy(true);
     const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
     if (result.error) {
+      logFailedSignIn({ data: { email: "", reason: "Google sign-in failed" } }).catch(() => {});
       toast.error("Google sign-in failed. Please try again.");
       setBusy(false);
       return;
     }
     if (result.redirected) return;
+    await logSignIn({ data: { method: "google" } }).catch(() => {});
     navigate({ to: "/portal", replace: true });
   }
 

@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import {
   accessQuery,
   adminFeesQuery,
-  adminGradesQuery,
   adminAccountsQuery,
   adminParentLinksQuery,
   adminStudentsQuery,
@@ -17,10 +16,8 @@ import {
   adminCreateStudent,
   adminDeleteAnnouncement,
   adminDeleteFeeRow,
-  adminDeleteGrade,
   adminDeleteParentLink,
   adminSaveAnnouncement,
-  adminSaveGrade,
   adminSetPassword,
   adminSetRole,
   adminUpdateStudent,
@@ -99,7 +96,7 @@ export const Route = createFileRoute("/_authenticated/portal/admin")({
   component: AdminDashboard,
 });
 
-const TABS = ["Students", "Grades", "Fees", "Announcements", "Parents", "Accounts", "Audit log"] as const;
+const TABS = ["Students", "Fees", "Announcements", "Parents", "Accounts", "Audit log"] as const;
 type Tab = (typeof TABS)[number];
 
 function AdminDashboard() {
@@ -123,7 +120,7 @@ function AdminDashboard() {
       <div>
         <p className="eyebrow">School administration</p>
         <h1 className="mt-2 text-4xl text-ink">Manage the portal</h1>
-        <p className="mt-1 text-sm text-ink/60">Add learners, record results, update fees, publish notices and link parents.</p>
+        <p className="mt-1 text-sm text-ink/60">Add learners, update fees, publish notices and link parents.</p>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -142,7 +139,6 @@ function AdminDashboard() {
       </div>
 
       {tab === "Students" && <StudentsPanel />}
-      {tab === "Grades" && <GradesPanel />}
       {tab === "Fees" && <FeesPanel />}
       {tab === "Announcements" && <AnnouncementsPanel />}
       {tab === "Parents" && <ParentsPanel />}
@@ -301,98 +297,6 @@ function StudentsPanel() {
           ))}
           {!students?.length && <p className="text-sm text-ink/60">No learners yet.</p>}
         </div>
-      </Panel>
-    </div>
-  );
-}
-
-/* ---------- grades ---------- */
-
-function GradesPanel() {
-  const [studentId, setStudentId] = useState("");
-  const { data: grades } = useQuery(adminGradesQuery(studentId));
-  const refresh = useRefresh();
-  const year = new Date().getFullYear();
-  const [form, setForm] = useState({ subject: "", term: 1, year, score: 0, grade: "A", teacher_comment: "" });
-
-  const save = useMutation({
-    mutationFn: () => adminSaveGrade({ data: { student_id: studentId, ...form, score: Number(form.score), term: Number(form.term), year: Number(form.year) } }),
-    onSuccess: () => {
-      toast.success("Result recorded");
-      refresh([["admin", "grades", studentId], ["portal", "grades"]]);
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  const remove = useMutation({
-    mutationFn: (id: string) => adminDeleteGrade({ data: { id } }),
-    onSuccess: () => refresh([["admin", "grades", studentId], ["portal", "grades"]]),
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  return (
-    <div className="space-y-6">
-      <Panel title="Record a result">
-        <form
-          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-          onSubmit={(e: FormEvent) => {
-            e.preventDefault();
-            if (!studentId) { toast.error("Choose a learner first"); return; }
-            save.mutate();
-          }}
-        >
-          <StudentPicker value={studentId} onChange={setStudentId} />
-          <Field label="Subject">
-            <input required className={inputClass} value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} />
-          </Field>
-          <Field label="Score (%)">
-            <input required type="number" min={0} max={100} className={inputClass} value={form.score} onChange={(e) => setForm({ ...form, score: Number(e.target.value) })} />
-          </Field>
-          <Field label="Grade">
-            <input required className={inputClass} value={form.grade} onChange={(e) => setForm({ ...form, grade: e.target.value })} />
-          </Field>
-          <Field label="Term">
-            <select className={inputClass} value={form.term} onChange={(e) => setForm({ ...form, term: Number(e.target.value) })}>
-              {[1, 2, 3].map((t) => (
-                <option key={t} value={t}>Term {t}</option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Year">
-            <input type="number" className={inputClass} value={form.year} onChange={(e) => setForm({ ...form, year: Number(e.target.value) })} />
-          </Field>
-          <div className="sm:col-span-2 lg:col-span-3">
-            <Field label="Teacher comment">
-              <input className={inputClass} value={form.teacher_comment} onChange={(e) => setForm({ ...form, teacher_comment: e.target.value })} />
-            </Field>
-          </div>
-          <div className="sm:col-span-2 lg:col-span-3">
-            <SubmitButton busy={save.isPending}>Save result</SubmitButton>
-          </div>
-        </form>
-      </Panel>
-
-      <Panel title="Recorded results">
-        {!studentId ? (
-          <p className="text-sm text-ink/60">Choose a learner above to see their results.</p>
-        ) : (
-          <ul className="divide-y divide-border">
-            {(grades ?? []).map((g) => (
-              <li key={g.id} className="flex items-center justify-between py-3 text-sm">
-                <span className="text-ink">
-                  {g.subject} · Term {g.term} {g.year}
-                </span>
-                <span className="flex items-center gap-4 text-ink/60">
-                  {g.score}% · {g.grade}
-                  <button type="button" className="text-clay hover:underline" onClick={() => remove.mutate(g.id)}>
-                    Remove
-                  </button>
-                </span>
-              </li>
-            ))}
-            {!grades?.length && <p className="text-sm text-ink/60">No results yet.</p>}
-          </ul>
-        )}
       </Panel>
     </div>
   );
@@ -706,7 +610,7 @@ function ParentsPanel() {
 
 /* ---------- accounts ---------- */
 
-const ROLES = ["admin", "teacher", "student", "parent"] as const;
+const ROLES = ["admin", "dean", "teacher", "student", "parent"] as const;
 
 function AccountsPanel() {
   const { data: accounts } = useQuery(adminAccountsQuery);

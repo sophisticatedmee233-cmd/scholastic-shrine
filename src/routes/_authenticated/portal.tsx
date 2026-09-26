@@ -32,6 +32,7 @@ function PortalLayout() {
   const navigate = useNavigate();
   const extraTabs = [
     ...(access?.childCount ? ([{ to: "/portal/family", label: "My Children" }] as const) : []),
+    ...(access?.isDean ? ([{ to: "/portal/dean", label: "Dean" }] as const) : []),
     ...(access?.isAdmin ? ([{ to: "/portal/admin", label: "Admin" }] as const) : []),
   ];
 

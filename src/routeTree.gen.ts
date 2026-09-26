@@ -22,6 +22,7 @@ import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenticated/portal.index'
 import { Route as AuthenticatedPortalAdminRouteImport } from './routes/_authenticated/portal.admin'
 import { Route as AuthenticatedPortalAnnouncementsRouteImport } from './routes/_authenticated/portal.announcements'
+import { Route as AuthenticatedPortalDeanRouteImport } from './routes/_authenticated/portal.dean'
 import { Route as AuthenticatedPortalFamilyRouteImport } from './routes/_authenticated/portal.family'
 import { Route as AuthenticatedPortalFeesRouteImport } from './routes/_authenticated/portal.fees'
 import { Route as AuthenticatedPortalGradesRouteImport } from './routes/_authenticated/portal.grades'
@@ -94,6 +95,11 @@ const AuthenticatedPortalAnnouncementsRoute =
     path: '/announcements',
     getParentRoute: () => AuthenticatedPortalRoute,
   } as any)
+const AuthenticatedPortalDeanRoute = AuthenticatedPortalDeanRouteImport.update({
+  id: '/dean',
+  path: '/dean',
+  getParentRoute: () => AuthenticatedPortalRoute,
+} as any)
 const AuthenticatedPortalFamilyRoute =
   AuthenticatedPortalFamilyRouteImport.update({
     id: '/family',
@@ -130,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/portal': typeof AuthenticatedPortalRouteWithChildren
   '/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
+  '/portal/dean': typeof AuthenticatedPortalDeanRoute
   '/portal/family': typeof AuthenticatedPortalFamilyRoute
   '/portal/fees': typeof AuthenticatedPortalFeesRoute
   '/portal/grades': typeof AuthenticatedPortalGradesRoute
@@ -147,6 +154,7 @@ export interface FileRoutesByTo {
   '/news': typeof NewsRoute
   '/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
+  '/portal/dean': typeof AuthenticatedPortalDeanRoute
   '/portal/family': typeof AuthenticatedPortalFamilyRoute
   '/portal/fees': typeof AuthenticatedPortalFeesRoute
   '/portal/grades': typeof AuthenticatedPortalGradesRoute
@@ -167,6 +175,7 @@ export interface FileRoutesById {
   '/_authenticated/portal': typeof AuthenticatedPortalRouteWithChildren
   '/_authenticated/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/_authenticated/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
+  '/_authenticated/portal/dean': typeof AuthenticatedPortalDeanRoute
   '/_authenticated/portal/family': typeof AuthenticatedPortalFamilyRoute
   '/_authenticated/portal/fees': typeof AuthenticatedPortalFeesRoute
   '/_authenticated/portal/grades': typeof AuthenticatedPortalGradesRoute
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/portal/admin'
     | '/portal/announcements'
+    | '/portal/dean'
     | '/portal/family'
     | '/portal/fees'
     | '/portal/grades'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/news'
     | '/portal/admin'
     | '/portal/announcements'
+    | '/portal/dean'
     | '/portal/family'
     | '/portal/fees'
     | '/portal/grades'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/_authenticated/portal'
     | '/_authenticated/portal/admin'
     | '/_authenticated/portal/announcements'
+    | '/_authenticated/portal/dean'
     | '/_authenticated/portal/family'
     | '/_authenticated/portal/fees'
     | '/_authenticated/portal/grades'
@@ -335,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortalAnnouncementsRouteImport
       parentRoute: typeof AuthenticatedPortalRoute
     }
+    '/_authenticated/portal/dean': {
+      id: '/_authenticated/portal/dean'
+      path: '/dean'
+      fullPath: '/portal/dean'
+      preLoaderRoute: typeof AuthenticatedPortalDeanRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
     '/_authenticated/portal/family': {
       id: '/_authenticated/portal/family'
       path: '/family'
@@ -369,6 +388,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedPortalRouteChildren {
   AuthenticatedPortalAdminRoute: typeof AuthenticatedPortalAdminRoute
   AuthenticatedPortalAnnouncementsRoute: typeof AuthenticatedPortalAnnouncementsRoute
+  AuthenticatedPortalDeanRoute: typeof AuthenticatedPortalDeanRoute
   AuthenticatedPortalFamilyRoute: typeof AuthenticatedPortalFamilyRoute
   AuthenticatedPortalFeesRoute: typeof AuthenticatedPortalFeesRoute
   AuthenticatedPortalGradesRoute: typeof AuthenticatedPortalGradesRoute
@@ -379,6 +399,7 @@ interface AuthenticatedPortalRouteChildren {
 const AuthenticatedPortalRouteChildren: AuthenticatedPortalRouteChildren = {
   AuthenticatedPortalAdminRoute: AuthenticatedPortalAdminRoute,
   AuthenticatedPortalAnnouncementsRoute: AuthenticatedPortalAnnouncementsRoute,
+  AuthenticatedPortalDeanRoute: AuthenticatedPortalDeanRoute,
   AuthenticatedPortalFamilyRoute: AuthenticatedPortalFamilyRoute,
   AuthenticatedPortalFeesRoute: AuthenticatedPortalFeesRoute,
   AuthenticatedPortalGradesRoute: AuthenticatedPortalGradesRoute,

@@ -16,6 +16,18 @@ async function assertAdmin(context: Ctx) {
   if (!data) throw new Error("Forbidden: admin access required");
 }
 
+async function hasRole(context: Ctx, role: string) {
+  const { data } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: role });
+  return Boolean(data);
+}
+
+/** Only the dean records results. Returns the service client for the write after the role check. */
+async function assertDean(context: Ctx) {
+  if (!(await hasRole(context, "dean"))) throw new Error("Forbidden: only the dean can record results");
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  return supabaseAdmin;
+}
+
 async function audit(context: Ctx, e: Omit<import("./audit.server").AuditEntry, "actorId">) {
   const { writeAudit } = await import("./audit.server");
   await writeAudit({ actorId: context.userId, ...e });
@@ -24,12 +36,13 @@ async function audit(context: Ctx, e: Omit<import("./audit.server").AuditEntry, 
 /** Whether the signed-in user is an admin and/or a linked parent. */
 export const getMyAccess = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<{ isAdmin: boolean; childCount: number }> => {
-    const [role, links] = await Promise.all([
+  .handler(async ({ context }): Promise<{ isAdmin: boolean; isDean: boolean; childCount: number }> => {
+    const [role, dean, links] = await Promise.all([
       context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" }),
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "dean" }),
       context.supabase.from("parent_students").select("id").eq("parent_id", context.userId),
     ]);
-    return { isAdmin: Boolean(role.data), childCount: links.data?.length ?? 0 };
+    return { isAdmin: Boolean(role.data), isDean: Boolean(dean.data), childCount: links.data?.length ?? 0 };
   });
 
 /* ---------------- Students ---------------- */
@@ -37,8 +50,9 @@ export const getMyAccess = createServerFn({ method: "GET" })
 export const adminListStudents = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<Profile[]> => {
-    await assertAdmin(context);
-    const { data, error } = await context.supabase.from("profiles").select("*").order("full_name");
+    let db = context.supabase;
+    if (!(await hasRole(context, "admin"))) db = await assertDean(context);
+    const { data, error } = await db.from("profiles").select("*").order("full_name");
     if (error) throw error;
     return data;
   });
@@ -101,8 +115,8 @@ export const adminListGrades = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { studentId: string }) => d)
   .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    const { data: rows, error } = await context.supabase
+    const db = await assertDean(context);
+    const { data: rows, error } = await db
       .from("grades")
       .select("*")
       .eq("student_id", data.studentId)
@@ -125,8 +139,8 @@ export const adminSaveGrade = createServerFn({ method: "POST" })
     teacher_comment: string;
   }) => d)
   .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    const { error } = await context.supabase.from("grades").insert(data);
+    const db = await assertDean(context);
+    const { error } = await db.from("grades").insert(data);
     if (error) throw error;
     await audit(context, { action: "grade_recorded", category: "grades", targetId: data.student_id, details: { subject: data.subject, term: data.term, year: data.year, score: data.score, grade: data.grade } });
     return { ok: true };
@@ -136,9 +150,9 @@ export const adminDeleteGrade = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string }) => d)
   .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    const { data: old } = await context.supabase.from("grades").select("*").eq("id", data.id).maybeSingle();
-    const { error } = await context.supabase.from("grades").delete().eq("id", data.id);
+    const db = await assertDean(context);
+    const { data: old } = await db.from("grades").select("*").eq("id", data.id).maybeSingle();
+    const { error } = await db.from("grades").delete().eq("id", data.id);
     if (error) throw error;
     await audit(context, { action: "grade_deleted", category: "grades", targetId: old?.student_id ?? null, details: old ? { subject: old.subject, term: old.term, year: old.year, score: old.score } : { id: data.id } });
     return { ok: true };
@@ -346,7 +360,7 @@ export const adminSetPassword = createServerFn({ method: "POST" })
 /** Grant or revoke a role on an account. */
 export const adminSetRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { userId: string; role: "admin" | "teacher" | "student" | "parent"; grant: boolean }) => d)
+  .inputValidator((d: { userId: string; role: "admin" | "dean" | "teacher" | "student" | "parent"; grant: boolean }) => d)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

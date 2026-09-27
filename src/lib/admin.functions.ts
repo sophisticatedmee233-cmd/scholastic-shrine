@@ -36,13 +36,14 @@ async function audit(context: Ctx, e: Omit<import("./audit.server").AuditEntry, 
 /** Whether the signed-in user is an admin and/or a linked parent. */
 export const getMyAccess = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<{ isAdmin: boolean; isDean: boolean; childCount: number }> => {
-    const [role, dean, links] = await Promise.all([
+  .handler(async ({ context }): Promise<{ isAdmin: boolean; isDean: boolean; isTeacher: boolean; childCount: number }> => {
+    const [role, dean, teacher, links] = await Promise.all([
       context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" }),
       context.supabase.rpc("has_role", { _user_id: context.userId, _role: "dean" }),
+      context.supabase.rpc("has_role", { _user_id: context.userId, _role: "teacher" }),
       context.supabase.from("parent_students").select("id").eq("parent_id", context.userId),
     ]);
-    return { isAdmin: Boolean(role.data), isDean: Boolean(dean.data), childCount: links.data?.length ?? 0 };
+    return { isAdmin: Boolean(role.data), isDean: Boolean(dean.data), isTeacher: Boolean(teacher.data), childCount: links.data?.length ?? 0 };
   });
 
 /* ---------------- Students ---------------- */

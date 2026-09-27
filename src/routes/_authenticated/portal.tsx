@@ -24,6 +24,7 @@ const tabs = [
   { to: "/portal/timetable", label: "Timetable" },
   { to: "/portal/fees", label: "Fees" },
   { to: "/portal/announcements", label: "Announcements" },
+  { to: "/portal/classwork", label: "Classwork" },
 ] as const;
 
 function PortalLayout() {
@@ -32,6 +33,7 @@ function PortalLayout() {
   const navigate = useNavigate();
   const extraTabs = [
     ...(access?.childCount ? ([{ to: "/portal/family", label: "My Children" }] as const) : []),
+    ...(access?.isTeacher || access?.isAdmin ? ([{ to: "/portal/teacher", label: "Teacher" }] as const) : []),
     ...(access?.isDean ? ([{ to: "/portal/dean", label: "Dean" }] as const) : []),
     ...(access?.isAdmin ? ([{ to: "/portal/admin", label: "Admin" }] as const) : []),
   ];

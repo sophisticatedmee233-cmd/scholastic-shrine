@@ -19,6 +19,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated/portal'
+import { Route as AuthTeacherRouteImport } from './routes/auth/teacher'
 import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenticated/portal.index'
 import { Route as AuthenticatedPortalAdminRouteImport } from './routes/_authenticated/portal.admin'
 import { Route as AuthenticatedPortalAnnouncementsRouteImport } from './routes/_authenticated/portal.announcements'
@@ -78,6 +79,11 @@ const AuthenticatedPortalRoute = AuthenticatedPortalRouteImport.update({
   id: '/portal',
   path: '/portal',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthTeacherRoute = AuthTeacherRouteImport.update({
+  id: '/teacher',
+  path: '/teacher',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthenticatedPortalIndexRoute =
   AuthenticatedPortalIndexRouteImport.update({
@@ -144,10 +150,11 @@ export interface FileRoutesByFullPath {
   '/academics': typeof AcademicsRoute
   '/admin': typeof AdminRoute
   '/admissions': typeof AdmissionsRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/contact': typeof ContactRoute
   '/news': typeof NewsRoute
   '/portal': typeof AuthenticatedPortalRouteWithChildren
+  '/auth/teacher': typeof AuthTeacherRoute
   '/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
   '/portal/classwork': typeof AuthenticatedPortalClassworkRoute
@@ -165,9 +172,10 @@ export interface FileRoutesByTo {
   '/academics': typeof AcademicsRoute
   '/admin': typeof AdminRoute
   '/admissions': typeof AdmissionsRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/contact': typeof ContactRoute
   '/news': typeof NewsRoute
+  '/auth/teacher': typeof AuthTeacherRoute
   '/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
   '/portal/classwork': typeof AuthenticatedPortalClassworkRoute
@@ -187,10 +195,11 @@ export interface FileRoutesById {
   '/academics': typeof AcademicsRoute
   '/admin': typeof AdminRoute
   '/admissions': typeof AdmissionsRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/contact': typeof ContactRoute
   '/news': typeof NewsRoute
   '/_authenticated/portal': typeof AuthenticatedPortalRouteWithChildren
+  '/auth/teacher': typeof AuthTeacherRoute
   '/_authenticated/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/_authenticated/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
   '/_authenticated/portal/classwork': typeof AuthenticatedPortalClassworkRoute
@@ -214,6 +223,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/news'
     | '/portal'
+    | '/auth/teacher'
     | '/portal/admin'
     | '/portal/announcements'
     | '/portal/classwork'
@@ -234,6 +244,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/news'
+    | '/auth/teacher'
     | '/portal/admin'
     | '/portal/announcements'
     | '/portal/classwork'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/news'
     | '/_authenticated/portal'
+    | '/auth/teacher'
     | '/_authenticated/portal/admin'
     | '/_authenticated/portal/announcements'
     | '/_authenticated/portal/classwork'
@@ -275,7 +287,7 @@ export interface RootRouteChildren {
   AcademicsRoute: typeof AcademicsRoute
   AdminRoute: typeof AdminRoute
   AdmissionsRoute: typeof AdmissionsRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   ContactRoute: typeof ContactRoute
   NewsRoute: typeof NewsRoute
 }
@@ -351,6 +363,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/portal'
       preLoaderRoute: typeof AuthenticatedPortalRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/auth/teacher': {
+      id: '/auth/teacher'
+      path: '/teacher'
+      fullPath: '/auth/teacher'
+      preLoaderRoute: typeof AuthTeacherRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_authenticated/portal/': {
       id: '/_authenticated/portal/'
@@ -465,6 +484,16 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AuthRouteChildren {
+  AuthTeacherRoute: typeof AuthTeacherRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthTeacherRoute: AuthTeacherRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -472,7 +501,7 @@ const rootRouteChildren: RootRouteChildren = {
   AcademicsRoute: AcademicsRoute,
   AdminRoute: AdminRoute,
   AdmissionsRoute: AdmissionsRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   ContactRoute: ContactRoute,
   NewsRoute: NewsRoute,
 }

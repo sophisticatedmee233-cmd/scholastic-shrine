@@ -9,9 +9,9 @@ import { Crest } from "@/components/site/Crest";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Student Portal Sign In — Limuru Town School" },
-      { name: "description", content: "Sign in to the Limuru Town School student portal to view grades, timetable, fees and announcements." },
-      { property: "og:title", content: "Student Portal Sign In — Limuru Town School" },
+      { title: "Student Portal Sign In — Daniel's Primary School" },
+      { name: "description", content: "Sign in to the Daniel's Primary School student portal to view grades, timetable, fees and announcements." },
+      { property: "og:title", content: "Student Portal Sign In — Daniel's Primary School" },
       { property: "og:description", content: "Access your grades, timetable, fee statements and school notices." },
     ],
   }),
@@ -83,7 +83,7 @@ function AuthPage() {
         <div className="relative flex h-full flex-col justify-between p-12 text-cream">
           <Link to="/" className="flex items-center gap-3">
             <Crest size="md" className="bg-gold text-ink" />
-            <span className="font-display text-xl font-semibold">Limuru Town School</span>
+            <span className="font-display text-xl font-semibold">Daniel's Primary School</span>
           </Link>
           <div>
             <p className="eyebrow">Student portal</p>
@@ -102,7 +102,7 @@ function AuthPage() {
         <div className="w-full max-w-sm">
           <Link to="/" className="mb-8 flex items-center gap-3 lg:hidden">
             <Crest size="sm" />
-            <span className="font-display font-semibold text-ink">Limuru Town School</span>
+            <span className="font-display font-semibold text-ink">Daniel's Primary School</span>
           </Link>
 
           {checkEmail ? (

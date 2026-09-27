@@ -44,6 +44,42 @@ export type Database = {
         }
         Relationships: []
       }
+      assignments: {
+        Row: {
+          class_name: string
+          created_at: string
+          due_date: string
+          id: string
+          instructions: string
+          subject: string
+          teacher_id: string
+          teacher_name: string
+          title: string
+        }
+        Insert: {
+          class_name: string
+          created_at?: string
+          due_date: string
+          id?: string
+          instructions?: string
+          subject: string
+          teacher_id: string
+          teacher_name?: string
+          title: string
+        }
+        Update: {
+          class_name?: string
+          created_at?: string
+          due_date?: string
+          id?: string
+          instructions?: string
+          subject?: string
+          teacher_id?: string
+          teacher_name?: string
+          title?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -287,6 +323,42 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      video_classes: {
+        Row: {
+          class_name: string
+          created_at: string
+          id: string
+          meeting_url: string
+          starts_at: string
+          subject: string
+          teacher_id: string
+          teacher_name: string
+          title: string
+        }
+        Insert: {
+          class_name: string
+          created_at?: string
+          id?: string
+          meeting_url: string
+          starts_at: string
+          subject: string
+          teacher_id: string
+          teacher_name?: string
+          title: string
+        }
+        Update: {
+          class_name?: string
+          created_at?: string
+          id?: string
+          meeting_url?: string
+          starts_at?: string
+          subject?: string
+          teacher_id?: string
+          teacher_name?: string
+          title?: string
         }
         Relationships: []
       }

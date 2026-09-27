@@ -22,10 +22,12 @@ import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenticated/portal.index'
 import { Route as AuthenticatedPortalAdminRouteImport } from './routes/_authenticated/portal.admin'
 import { Route as AuthenticatedPortalAnnouncementsRouteImport } from './routes/_authenticated/portal.announcements'
+import { Route as AuthenticatedPortalClassworkRouteImport } from './routes/_authenticated/portal.classwork'
 import { Route as AuthenticatedPortalDeanRouteImport } from './routes/_authenticated/portal.dean'
 import { Route as AuthenticatedPortalFamilyRouteImport } from './routes/_authenticated/portal.family'
 import { Route as AuthenticatedPortalFeesRouteImport } from './routes/_authenticated/portal.fees'
 import { Route as AuthenticatedPortalGradesRouteImport } from './routes/_authenticated/portal.grades'
+import { Route as AuthenticatedPortalTeacherRouteImport } from './routes/_authenticated/portal.teacher'
 import { Route as AuthenticatedPortalTimetableRouteImport } from './routes/_authenticated/portal.timetable'
 
 const IndexRoute = IndexRouteImport.update({
@@ -95,6 +97,12 @@ const AuthenticatedPortalAnnouncementsRoute =
     path: '/announcements',
     getParentRoute: () => AuthenticatedPortalRoute,
   } as any)
+const AuthenticatedPortalClassworkRoute =
+  AuthenticatedPortalClassworkRouteImport.update({
+    id: '/classwork',
+    path: '/classwork',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
 const AuthenticatedPortalDeanRoute = AuthenticatedPortalDeanRouteImport.update({
   id: '/dean',
   path: '/dean',
@@ -117,6 +125,12 @@ const AuthenticatedPortalGradesRoute =
     path: '/grades',
     getParentRoute: () => AuthenticatedPortalRoute,
   } as any)
+const AuthenticatedPortalTeacherRoute =
+  AuthenticatedPortalTeacherRouteImport.update({
+    id: '/teacher',
+    path: '/teacher',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
 const AuthenticatedPortalTimetableRoute =
   AuthenticatedPortalTimetableRouteImport.update({
     id: '/timetable',
@@ -136,10 +150,12 @@ export interface FileRoutesByFullPath {
   '/portal': typeof AuthenticatedPortalRouteWithChildren
   '/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
+  '/portal/classwork': typeof AuthenticatedPortalClassworkRoute
   '/portal/dean': typeof AuthenticatedPortalDeanRoute
   '/portal/family': typeof AuthenticatedPortalFamilyRoute
   '/portal/fees': typeof AuthenticatedPortalFeesRoute
   '/portal/grades': typeof AuthenticatedPortalGradesRoute
+  '/portal/teacher': typeof AuthenticatedPortalTeacherRoute
   '/portal/timetable': typeof AuthenticatedPortalTimetableRoute
   '/portal/': typeof AuthenticatedPortalIndexRoute
 }
@@ -154,10 +170,12 @@ export interface FileRoutesByTo {
   '/news': typeof NewsRoute
   '/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
+  '/portal/classwork': typeof AuthenticatedPortalClassworkRoute
   '/portal/dean': typeof AuthenticatedPortalDeanRoute
   '/portal/family': typeof AuthenticatedPortalFamilyRoute
   '/portal/fees': typeof AuthenticatedPortalFeesRoute
   '/portal/grades': typeof AuthenticatedPortalGradesRoute
+  '/portal/teacher': typeof AuthenticatedPortalTeacherRoute
   '/portal/timetable': typeof AuthenticatedPortalTimetableRoute
   '/portal': typeof AuthenticatedPortalIndexRoute
 }
@@ -175,10 +193,12 @@ export interface FileRoutesById {
   '/_authenticated/portal': typeof AuthenticatedPortalRouteWithChildren
   '/_authenticated/portal/admin': typeof AuthenticatedPortalAdminRoute
   '/_authenticated/portal/announcements': typeof AuthenticatedPortalAnnouncementsRoute
+  '/_authenticated/portal/classwork': typeof AuthenticatedPortalClassworkRoute
   '/_authenticated/portal/dean': typeof AuthenticatedPortalDeanRoute
   '/_authenticated/portal/family': typeof AuthenticatedPortalFamilyRoute
   '/_authenticated/portal/fees': typeof AuthenticatedPortalFeesRoute
   '/_authenticated/portal/grades': typeof AuthenticatedPortalGradesRoute
+  '/_authenticated/portal/teacher': typeof AuthenticatedPortalTeacherRoute
   '/_authenticated/portal/timetable': typeof AuthenticatedPortalTimetableRoute
   '/_authenticated/portal/': typeof AuthenticatedPortalIndexRoute
 }
@@ -196,10 +216,12 @@ export interface FileRouteTypes {
     | '/portal'
     | '/portal/admin'
     | '/portal/announcements'
+    | '/portal/classwork'
     | '/portal/dean'
     | '/portal/family'
     | '/portal/fees'
     | '/portal/grades'
+    | '/portal/teacher'
     | '/portal/timetable'
     | '/portal/'
   fileRoutesByTo: FileRoutesByTo
@@ -214,10 +236,12 @@ export interface FileRouteTypes {
     | '/news'
     | '/portal/admin'
     | '/portal/announcements'
+    | '/portal/classwork'
     | '/portal/dean'
     | '/portal/family'
     | '/portal/fees'
     | '/portal/grades'
+    | '/portal/teacher'
     | '/portal/timetable'
     | '/portal'
   id:
@@ -234,10 +258,12 @@ export interface FileRouteTypes {
     | '/_authenticated/portal'
     | '/_authenticated/portal/admin'
     | '/_authenticated/portal/announcements'
+    | '/_authenticated/portal/classwork'
     | '/_authenticated/portal/dean'
     | '/_authenticated/portal/family'
     | '/_authenticated/portal/fees'
     | '/_authenticated/portal/grades'
+    | '/_authenticated/portal/teacher'
     | '/_authenticated/portal/timetable'
     | '/_authenticated/portal/'
   fileRoutesById: FileRoutesById
@@ -347,6 +373,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortalAnnouncementsRouteImport
       parentRoute: typeof AuthenticatedPortalRoute
     }
+    '/_authenticated/portal/classwork': {
+      id: '/_authenticated/portal/classwork'
+      path: '/classwork'
+      fullPath: '/portal/classwork'
+      preLoaderRoute: typeof AuthenticatedPortalClassworkRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
     '/_authenticated/portal/dean': {
       id: '/_authenticated/portal/dean'
       path: '/dean'
@@ -375,6 +408,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortalGradesRouteImport
       parentRoute: typeof AuthenticatedPortalRoute
     }
+    '/_authenticated/portal/teacher': {
+      id: '/_authenticated/portal/teacher'
+      path: '/teacher'
+      fullPath: '/portal/teacher'
+      preLoaderRoute: typeof AuthenticatedPortalTeacherRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
     '/_authenticated/portal/timetable': {
       id: '/_authenticated/portal/timetable'
       path: '/timetable'
@@ -388,10 +428,12 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedPortalRouteChildren {
   AuthenticatedPortalAdminRoute: typeof AuthenticatedPortalAdminRoute
   AuthenticatedPortalAnnouncementsRoute: typeof AuthenticatedPortalAnnouncementsRoute
+  AuthenticatedPortalClassworkRoute: typeof AuthenticatedPortalClassworkRoute
   AuthenticatedPortalDeanRoute: typeof AuthenticatedPortalDeanRoute
   AuthenticatedPortalFamilyRoute: typeof AuthenticatedPortalFamilyRoute
   AuthenticatedPortalFeesRoute: typeof AuthenticatedPortalFeesRoute
   AuthenticatedPortalGradesRoute: typeof AuthenticatedPortalGradesRoute
+  AuthenticatedPortalTeacherRoute: typeof AuthenticatedPortalTeacherRoute
   AuthenticatedPortalTimetableRoute: typeof AuthenticatedPortalTimetableRoute
   AuthenticatedPortalIndexRoute: typeof AuthenticatedPortalIndexRoute
 }
@@ -399,10 +441,12 @@ interface AuthenticatedPortalRouteChildren {
 const AuthenticatedPortalRouteChildren: AuthenticatedPortalRouteChildren = {
   AuthenticatedPortalAdminRoute: AuthenticatedPortalAdminRoute,
   AuthenticatedPortalAnnouncementsRoute: AuthenticatedPortalAnnouncementsRoute,
+  AuthenticatedPortalClassworkRoute: AuthenticatedPortalClassworkRoute,
   AuthenticatedPortalDeanRoute: AuthenticatedPortalDeanRoute,
   AuthenticatedPortalFamilyRoute: AuthenticatedPortalFamilyRoute,
   AuthenticatedPortalFeesRoute: AuthenticatedPortalFeesRoute,
   AuthenticatedPortalGradesRoute: AuthenticatedPortalGradesRoute,
+  AuthenticatedPortalTeacherRoute: AuthenticatedPortalTeacherRoute,
   AuthenticatedPortalTimetableRoute: AuthenticatedPortalTimetableRoute,
   AuthenticatedPortalIndexRoute: AuthenticatedPortalIndexRoute,
 }

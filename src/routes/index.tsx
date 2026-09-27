@@ -12,9 +12,9 @@ import aerialImg from "@/assets/campus-aerial.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Limuru Town School — Where Limuru's brightest futures begin" },
+      { title: "Daniel's Primary School — Where Limuru's brightest futures begin" },
       { name: "description", content: "A CBC-aligned day and boarding school in Limuru, Kiambu County. Explore academics, admissions, news and the student portal." },
-      { property: "og:title", content: "Limuru Town School" },
+      { property: "og:title", content: "Daniel's Primary School" },
       { property: "og:description", content: "Nurturing minds in the hills of Kiambu since 1965. Academics, admissions, news and student portal." },
     ],
   }),
@@ -54,7 +54,7 @@ function HomePage() {
           <div className="lg:col-span-5">
             <img
               src={heroImg}
-              alt="Limuru Town School students walking along a tree-lined campus path"
+              alt="Daniel's Primary School students walking along a tree-lined campus path"
               width={1024}
               height={1280}
               className="aspect-[4/5] w-full rounded-2xl object-cover shadow-card ring-1 ring-cream/20"
@@ -205,7 +205,7 @@ function HomePage() {
             <Link to="/contact" className="pill-brand mt-7">Book a campus tour</Link>
           </div>
           <div className="lg:col-span-7">
-            <img src={aerialImg} alt="Aerial view of the Limuru Town School campus among tea farms" loading="lazy" width={1200} height={704} className="aspect-[12/7] w-full rounded-2xl object-cover" />
+            <img src={aerialImg} alt="Aerial view of the Daniel's Primary School campus among tea farms" loading="lazy" width={1200} height={704} className="aspect-[12/7] w-full rounded-2xl object-cover" />
           </div>
         </div>
       </section>

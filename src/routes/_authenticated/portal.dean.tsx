@@ -8,9 +8,9 @@ import { adminDeleteGrade, adminSaveGrade } from "@/lib/admin.functions";
 export const Route = createFileRoute("/_authenticated/portal/dean")({
   head: () => ({
     meta: [
-      { title: "Dean's Office — Limuru Town School" },
+      { title: "Dean's Office — Daniel's Primary School" },
       { name: "description", content: "The Dean of Studies records and publishes learner results to the student portal." },
-      { property: "og:title", content: "Dean's Office — Limuru Town School" },
+      { property: "og:title", content: "Dean's Office — Daniel's Primary School" },
       { property: "og:description", content: "Record and publish learner results." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

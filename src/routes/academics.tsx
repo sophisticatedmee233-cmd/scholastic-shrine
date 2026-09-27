@@ -5,9 +5,9 @@ import { StreamCard } from "./index";
 export const Route = createFileRoute("/academics")({
   head: () => ({
     meta: [
-      { title: "Academics — Limuru Town School" },
-      { name: "description", content: "CBC-aligned Junior and Senior School programmes, STEM and Arts pathways, and co-curricular life at Limuru Town School." },
-      { property: "og:title", content: "Academics at Limuru Town School" },
+      { title: "Academics — Daniel's Primary School" },
+      { name: "description", content: "CBC-aligned Junior and Senior School programmes, STEM and Arts pathways, and co-curricular life at Daniel's Primary School." },
+      { property: "og:title", content: "Academics at Daniel's Primary School" },
       { property: "og:description", content: "Junior School, Senior School pathways and co-curricular programmes." },
     ],
   }),

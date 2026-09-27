@@ -22,8 +22,8 @@ export function SiteHeader() {
         <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
           <Crest size="sm" />
           <div>
-            <p className="font-display font-semibold leading-none text-ink">Limuru Town School</p>
-            <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-sage">Limuru, Kenya</p>
+            <p className="font-display font-semibold leading-none text-ink">Daniel's Primary School</p>
+            <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-sage">Kenya</p>
           </div>
         </Link>
 

@@ -8,9 +8,9 @@ import { Crest } from "@/components/site/Crest";
 export const Route = createFileRoute("/_authenticated/portal")({
   head: () => ({
     meta: [
-      { title: "Student Portal — Limuru Town School" },
-      { name: "description", content: "Grades, timetable, fee statements and announcements for Limuru Town School learners." },
-      { property: "og:title", content: "Student Portal — Limuru Town School" },
+      { title: "Student Portal — Daniel's Primary School" },
+      { name: "description", content: "Grades, timetable, fee statements and announcements for Daniel's Primary School learners." },
+      { property: "og:title", content: "Student Portal — Daniel's Primary School" },
       { property: "og:description", content: "Grades, timetable, fee statements and announcements in one place." },
       { name: "robots", content: "noindex" },
     ],
@@ -24,6 +24,7 @@ const tabs = [
   { to: "/portal/timetable", label: "Timetable" },
   { to: "/portal/fees", label: "Fees" },
   { to: "/portal/announcements", label: "Announcements" },
+  { to: "/portal/classwork", label: "Classwork" },
 ] as const;
 
 function PortalLayout() {
@@ -32,6 +33,7 @@ function PortalLayout() {
   const navigate = useNavigate();
   const extraTabs = [
     ...(access?.childCount ? ([{ to: "/portal/family", label: "My Children" }] as const) : []),
+    ...(access?.isTeacher || access?.isAdmin ? ([{ to: "/portal/teacher", label: "Teacher" }] as const) : []),
     ...(access?.isDean ? ([{ to: "/portal/dean", label: "Dean" }] as const) : []),
     ...(access?.isAdmin ? ([{ to: "/portal/admin", label: "Admin" }] as const) : []),
   ];
@@ -44,7 +46,7 @@ function PortalLayout() {
             <Crest size="sm" />
             <div>
               <p className="font-display font-semibold leading-none text-ink">Student Portal</p>
-              <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-sage">Limuru Town School</p>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-sage">Daniel's Primary School</p>
             </div>
           </Link>
           <div className="flex items-center gap-4">

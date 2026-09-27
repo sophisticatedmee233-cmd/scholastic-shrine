@@ -50,6 +50,13 @@
       "when": 1790450921102,
       "tag": "0006_add_dean_role",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1790514138748,
+      "tag": "0007_teacher_assignments_classes",
+      "breakpoints": true
     }
   ]
 }

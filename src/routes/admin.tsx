@@ -10,9 +10,9 @@ import { Crest } from "@/components/site/Crest";
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Administrator Sign In — Limuru Town School" },
-      { name: "description", content: "Staff and administrator sign-in for the Limuru Town School management dashboard." },
-      { property: "og:title", content: "Administrator Sign In — Limuru Town School" },
+      { title: "Administrator Sign In — Daniel's Primary School" },
+      { name: "description", content: "Staff and administrator sign-in for the Daniel's Primary School management dashboard." },
+      { property: "og:title", content: "Administrator Sign In — Daniel's Primary School" },
       { property: "og:description", content: "Secure sign-in for school administrators." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -57,7 +57,7 @@ function AdminLogin() {
       <div className="w-full max-w-sm rounded-2xl bg-cream p-8 shadow-card">
         <Link to="/" className="flex items-center gap-3">
           <Crest size="sm" />
-          <span className="font-display font-semibold text-ink">Limuru Town School</span>
+          <span className="font-display font-semibold text-ink">Daniel's Primary School</span>
         </Link>
         <div className="mt-8 flex items-center gap-2 text-brand">
           <ShieldCheck className="size-5" />

@@ -7,9 +7,9 @@ import { Step, FeeRow } from "./index";
 export const Route = createFileRoute("/admissions")({
   head: () => ({
     meta: [
-      { title: "Admissions — Limuru Town School" },
-      { name: "description", content: "How to apply to Limuru Town School: entry requirements, key dates, fee structure and an online enquiry form." },
-      { property: "og:title", content: "Admissions — Limuru Town School" },
+      { title: "Admissions — Daniel's Primary School" },
+      { name: "description", content: "How to apply to Daniel's Primary School: entry requirements, key dates, fee structure and an online enquiry form." },
+      { property: "og:title", content: "Admissions — Daniel's Primary School" },
       { property: "og:description", content: "Entry requirements, key dates, fees and enquiry form." },
     ],
   }),

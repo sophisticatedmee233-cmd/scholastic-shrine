@@ -9,9 +9,9 @@ import cultureImg from "@/assets/news-culture.jpg";
 export const Route = createFileRoute("/news")({
   head: () => ({
     meta: [
-      { title: "News & Announcements — Limuru Town School" },
-      { name: "description", content: "The latest news, notices and events from Limuru Town School." },
-      { property: "og:title", content: "News & Announcements — Limuru Town School" },
+      { title: "News & Announcements — Daniel's Primary School" },
+      { name: "description", content: "The latest news, notices and events from Daniel's Primary School." },
+      { property: "og:title", content: "News & Announcements — Daniel's Primary School" },
       { property: "og:description", content: "Latest news, notices and events from the campus." },
     ],
   }),

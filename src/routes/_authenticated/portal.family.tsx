@@ -7,9 +7,9 @@ import { DAY_NAMES, formatDate, formatKES, formatTime } from "@/lib/portal.queri
 export const Route = createFileRoute("/_authenticated/portal/family")({
   head: () => ({
     meta: [
-      { title: "Parent Portal — Limuru Town School" },
-      { name: "description", content: "Parents follow their child's grades, timetable and fee balance at Limuru Town School." },
-      { property: "og:title", content: "Parent Portal — Limuru Town School" },
+      { title: "Parent Portal — Daniel's Primary School" },
+      { name: "description", content: "Parents follow their child's grades, timetable and fee balance at Daniel's Primary School." },
+      { property: "og:title", content: "Parent Portal — Daniel's Primary School" },
       { property: "og:description", content: "Follow your child's grades, timetable and fee balance." },
       { name: "robots", content: "noindex" },
     ],

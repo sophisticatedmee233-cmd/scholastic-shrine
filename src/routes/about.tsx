@@ -6,10 +6,10 @@ import aerialImg from "@/assets/campus-aerial.jpg";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — Limuru Town School" },
-      { name: "description", content: "Our history, values and leadership. Limuru Town School has nurtured learners in the Kiambu highlands since 1965." },
-      { property: "og:title", content: "About Limuru Town School" },
-      { property: "og:description", content: "History, values and leadership of Limuru Town School." },
+      { title: "About — Daniel's Primary School" },
+      { name: "description", content: "Our history, values and leadership. Daniel's Primary School has nurtured learners in the Kiambu highlands since 1965." },
+      { property: "og:title", content: "About Daniel's Primary School" },
+      { property: "og:description", content: "History, values and leadership of Daniel's Primary School." },
     ],
   }),
   component: AboutPage,
@@ -40,7 +40,7 @@ function AboutPage() {
             <p className="eyebrow">Our story</p>
             <h2 className="mt-2 text-4xl text-ink">From a two-classroom start to 1,240 learners.</h2>
             <div className="mt-5 space-y-4 leading-relaxed text-ink/70">
-              <p>Limuru Town School opened its gates in 1965 with two classrooms and thirty-eight learners. Today it is a mixed day and boarding school serving Junior School (Grade 7–9) and Senior School (Grade 10–12) under the Competency Based Curriculum.</p>
+              <p>Daniel's Primary School opened its gates in 1965 with two classrooms and thirty-eight learners. Today it is a mixed day and boarding school serving Junior School (Grade 7–9) and Senior School (Grade 10–12) under the Competency Based Curriculum.</p>
               <p>Our campus sits among the tea estates of Kiambu County — a setting that shapes our calm, disciplined culture and our commitment to environmental stewardship.</p>
             </div>
           </div>

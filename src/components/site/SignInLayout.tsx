@@ -33,9 +33,9 @@ export function SignInLayout({ role, children }: { role: keyof typeof entrances;
           <p className="hidden text-sm text-entrance-foreground/70 lg:block">Daniel's Primary School · {entrance.label} portal</p>
         </div>
       </section>
-      <section className="flex flex-col px-6 py-8 sm:px-10 lg:px-12 lg:py-10">
+      <section className="flex min-w-0 flex-col px-6 py-8 sm:px-10 lg:px-12 lg:py-10">
         <Link to="/" className="inline-flex w-fit items-center gap-2 text-sm text-muted-foreground hover:text-entrance"><ArrowLeft className="size-4" />Back to school</Link>
-        <div className="mx-auto my-auto w-full max-w-sm py-8 lg:py-12">
+        <div className="mx-auto my-auto w-full min-w-0 max-w-sm py-8 lg:py-12 [&_h1]:break-words">
           <div className="mb-5 flex items-center gap-3 text-entrance">
             <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-entrance-soft"><Icon className="size-6" /></span>
             <p className="text-xs font-semibold uppercase tracking-normal">{entrance.label} entrance</p>

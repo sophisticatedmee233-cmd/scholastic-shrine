@@ -5,6 +5,8 @@ import { StreamCard } from "./index";
 export const Route = createFileRoute("/academics")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Academics — Daniel's Primary School" },
       { name: "description", content: "CBC-aligned Junior and Senior School programmes, STEM and Arts pathways, and co-curricular life at Daniel's Primary School." },
       { property: "og:title", content: "Academics at Daniel's Primary School" },

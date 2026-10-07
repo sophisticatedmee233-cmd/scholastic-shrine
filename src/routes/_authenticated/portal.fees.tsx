@@ -3,6 +3,17 @@ import { useQuery } from "@tanstack/react-query";
 import { feesQuery, formatDate, formatKES } from "@/lib/portal.queries";
 
 export const Route = createFileRoute("/_authenticated/portal/fees")({
+  head: () => ({
+    meta: [
+      { title: "Student Fees and Payments — Daniel's Primary School" },
+      { name: "description", content: "View your school invoices, payments and balance." },
+      { property: "og:title", content: "Student Fees and Payments — Daniel's Primary School" },
+      { property: "og:description", content: "View your school invoices, payments and balance." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: FeesPage,
 });
 

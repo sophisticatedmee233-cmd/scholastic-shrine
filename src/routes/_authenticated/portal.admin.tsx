@@ -93,6 +93,17 @@ function AuditPanel() {
 }
 
 export const Route = createFileRoute("/_authenticated/portal/admin")({
+  head: () => ({
+    meta: [
+      { title: "School Administration — Daniel's Primary School" },
+      { name: "description", content: "Manage school accounts, students, fees and announcements." },
+      { property: "og:title", content: "School Administration — Daniel's Primary School" },
+      { property: "og:description", content: "Manage school accounts, students, fees and announcements." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: AdminDashboard,
 });
 

@@ -12,6 +12,8 @@ import aerialImg from "@/assets/campus-aerial.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Daniel's Primary School — Where Limuru's brightest futures begin" },
       { name: "description", content: "A CBC-aligned day and boarding school in Limuru, Kiambu County. Explore academics, admissions, news and the student portal." },
       { property: "og:title", content: "Daniel's Primary School" },

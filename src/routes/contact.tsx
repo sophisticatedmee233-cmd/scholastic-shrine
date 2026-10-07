@@ -8,6 +8,8 @@ import aerialImg from "@/assets/campus-aerial.jpg";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Contact — Daniel's Primary School" },
       { name: "description", content: "Visit, call or write to Daniel's Primary School in Kiambu County. Office hours, directions and a contact form." },
       { property: "og:title", content: "Contact Daniel's Primary School" },

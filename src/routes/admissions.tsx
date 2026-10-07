@@ -7,6 +7,8 @@ import { Step, FeeRow } from "./index";
 export const Route = createFileRoute("/admissions")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Admissions — Daniel's Primary School" },
       { name: "description", content: "How to apply to Daniel's Primary School: entry requirements, key dates, fee structure and an online enquiry form." },
       { property: "og:title", content: "Admissions — Daniel's Primary School" },

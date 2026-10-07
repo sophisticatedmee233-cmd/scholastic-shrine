@@ -8,6 +8,8 @@ import { Crest } from "@/components/site/Crest";
 export const Route = createFileRoute("/_authenticated/portal")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Student Portal — Daniel's Primary School" },
       { name: "description", content: "Grades, timetable, fee statements and announcements for Daniel's Primary School learners." },
       { property: "og:title", content: "Student Portal — Daniel's Primary School" },

@@ -3,6 +3,17 @@ import { useQuery } from "@tanstack/react-query";
 import { DAY_NAMES, formatTime, timetableQuery } from "@/lib/portal.queries";
 
 export const Route = createFileRoute("/_authenticated/portal/timetable")({
+  head: () => ({
+    meta: [
+      { title: "Student Timetable — Daniel's Primary School" },
+      { name: "description", content: "View your weekly class timetable." },
+      { property: "og:title", content: "Student Timetable — Daniel's Primary School" },
+      { property: "og:description", content: "View your weekly class timetable." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: TimetablePage,
 });
 

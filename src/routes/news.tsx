@@ -9,6 +9,8 @@ import cultureImg from "@/assets/news-culture.jpg";
 export const Route = createFileRoute("/news")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "News & Announcements — Daniel's Primary School" },
       { name: "description", content: "The latest news, notices and events from Daniel's Primary School." },
       { property: "og:title", content: "News & Announcements — Daniel's Primary School" },

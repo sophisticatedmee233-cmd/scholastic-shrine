@@ -13,6 +13,17 @@ import {
 } from "@/lib/portal.queries";
 
 export const Route = createFileRoute("/_authenticated/portal/")({
+  head: () => ({
+    meta: [
+      { title: "Portal Overview — Daniel's Primary School" },
+      { name: "description", content: "Your school records, notices and weekly schedule." },
+      { property: "og:title", content: "Portal Overview — Daniel's Primary School" },
+      { property: "og:description", content: "Your school records, notices and weekly schedule." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: PortalOverview,
 });
 

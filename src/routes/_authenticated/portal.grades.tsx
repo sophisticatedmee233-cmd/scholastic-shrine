@@ -3,6 +3,17 @@ import { useQuery } from "@tanstack/react-query";
 import { gradesQuery } from "@/lib/portal.queries";
 
 export const Route = createFileRoute("/_authenticated/portal/grades")({
+  head: () => ({
+    meta: [
+      { title: "Student Grades and Reports — Daniel's Primary School" },
+      { name: "description", content: "View your published term results and reports." },
+      { property: "og:title", content: "Student Grades and Reports — Daniel's Primary School" },
+      { property: "og:description", content: "View your published term results and reports." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: GradesPage,
 });
 

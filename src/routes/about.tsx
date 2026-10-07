@@ -6,6 +6,8 @@ import aerialImg from "@/assets/campus-aerial.jpg";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "About — Daniel's Primary School" },
       { name: "description", content: "Our history, values and leadership. Daniel's Primary School has nurtured learners in the Kiambu highlands since 1965." },
       { property: "og:title", content: "About Daniel's Primary School" },

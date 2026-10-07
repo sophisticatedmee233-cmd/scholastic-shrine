@@ -3,6 +3,17 @@ import { useQuery } from "@tanstack/react-query";
 import { announcementsQuery, formatDate } from "@/lib/portal.queries";
 
 export const Route = createFileRoute("/_authenticated/portal/announcements")({
+  head: () => ({
+    meta: [
+      { title: "Portal Announcements — Daniel's Primary School" },
+      { name: "description", content: "Read school notices and announcements." },
+      { property: "og:title", content: "Portal Announcements — Daniel's Primary School" },
+      { property: "og:description", content: "Read school notices and announcements." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: AnnouncementsPage,
 });
 

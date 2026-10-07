@@ -1,11 +1,11 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyAccess } from "@/lib/admin.functions";
 import { logFailedSignIn, logSignIn } from "@/lib/audit.functions";
-import { Crest } from "@/components/site/Crest";
+import { SignInLayout } from "@/components/site/SignInLayout";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -53,18 +53,9 @@ function AdminLogin() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-brand px-6 py-12">
-      <div className="w-full max-w-sm rounded-2xl bg-cream p-8 shadow-card">
-        <Link to="/" className="flex items-center gap-3">
-          <Crest size="sm" />
-          <span className="font-display font-semibold text-ink">Daniel's Primary School</span>
-        </Link>
-        <div className="mt-8 flex items-center gap-2 text-brand">
-          <ShieldCheck className="size-5" />
-          <p className="eyebrow">Administrator access</p>
-        </div>
-        <h1 className="mt-2 text-3xl text-ink">Staff sign in.</h1>
-        <p className="mt-2 text-sm text-ink/60">Only school administrators can sign in here.</p>
+    <SignInLayout role="administrator">
+        <h1 className="text-3xl leading-tight text-ink tracking-normal">Welcome, administrator.</h1>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">A warm welcome to the Daniel's Primary School office.</p>
         <form onSubmit={handleSubmit} className="mt-6 space-y-3">
           <label className="block">
             <span className="text-xs uppercase tracking-wider text-ink/50">Email</span>
@@ -74,15 +65,11 @@ function AdminLogin() {
             <span className="text-xs uppercase tracking-wider text-ink/50">Password</span>
             <input required type="password" value={password} onChange={(e) => setPassword(e.target.value)} className={inputCls} />
           </label>
-          <button type="submit" disabled={busy} className="pill-brand h-11 w-full text-sm disabled:opacity-60">
+          <Button type="submit" disabled={busy} className="h-11 w-full">
             {busy ? "Checking…" : "Sign in to admin"}
-          </button>
+          </Button>
         </form>
-        <p className="mt-5 text-center text-sm text-ink/60">
-          Student or parent? <Link to="/auth" className="font-semibold text-brand hover:underline">Use the portal sign-in</Link>
-        </p>
-      </div>
-    </div>
+    </SignInLayout>
   );
 }
 

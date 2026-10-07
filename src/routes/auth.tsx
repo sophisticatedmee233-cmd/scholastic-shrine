@@ -1,10 +1,11 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useMatchRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { logFailedSignIn, logSignIn } from "@/lib/audit.functions";
-import { Crest } from "@/components/site/Crest";
+import { SignInLayout } from "@/components/site/SignInLayout";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -13,10 +14,17 @@ export const Route = createFileRoute("/auth")({
       { name: "description", content: "Sign in to the Daniel's Primary School student portal to view grades, timetable, fees and announcements." },
       { property: "og:title", content: "Student Portal Sign In — Daniel's Primary School" },
       { property: "og:description", content: "Access your grades, timetable, fee statements and school notices." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: AuthPage,
+  component: AuthEntrance,
 });
+
+function AuthEntrance() {
+  const matchRoute = useMatchRoute();
+  return matchRoute({ to: "/auth/teacher" }) ? <Outlet /> : <AuthPage />;
+}
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -77,66 +85,36 @@ function AuthPage() {
   }
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
-      <section className="relative hidden overflow-hidden bg-brand lg:block">
-        <div className="hero-glow absolute inset-0" />
-        <div className="relative flex h-full flex-col justify-between p-12 text-cream">
-          <Link to="/" className="flex items-center gap-3">
-            <Crest size="md" className="bg-gold text-ink" />
-            <span className="font-display text-xl font-semibold">Daniel's Primary School</span>
-          </Link>
-          <div>
-            <p className="eyebrow">Student portal</p>
-            <h1 className="mt-3 max-w-md text-5xl leading-[1.05]">
-              Your grades, timetable and fees — <span className="italic text-gold">in one place.</span>
-            </h1>
-            <p className="mt-5 max-w-sm text-cream/70">
-              Sign in with your school email. New learners can create an account and their class records will be linked by the office.
-            </p>
-          </div>
-          <p className="text-xs text-cream/50">
-            Need help? Contact the ICT desk · ict@limurutown.ac.ke ·{" "}
-            <Link to="/auth/teacher" className="underline">Teacher sign-in</Link> ·{" "}
-            <Link to="/admin" className="underline">Administrator sign-in</Link>
-          </p>
-        </div>
-      </section>
-
-      <section className="flex items-center justify-center bg-cream px-6 py-12">
-        <div className="w-full max-w-sm">
-          <Link to="/" className="mb-8 flex items-center gap-3 lg:hidden">
-            <Crest size="sm" />
-            <span className="font-display font-semibold text-ink">Daniel's Primary School</span>
-          </Link>
-
+    <SignInLayout role="student">
           {checkEmail ? (
-            <div className="rounded-2xl bg-paper p-6 shadow-card">
+            <div className="">
               <p className="eyebrow">One more step</p>
               <h2 className="mt-2 text-2xl text-ink">Check your email</h2>
               <p className="mt-3 text-sm text-ink/70">
                 We sent a confirmation link to <span className="font-semibold text-ink">{email}</span>. Click it to activate your portal account, then sign in.
               </p>
-              <button type="button" onClick={() => { setCheckEmail(false); setMode("signin"); }} className="pill-brand mt-6 w-full text-sm">
+              <Button type="button" onClick={() => { setCheckEmail(false); setMode("signin"); }} className="mt-6 h-11 w-full">
                 Back to sign in
-              </button>
+              </Button>
             </div>
           ) : (
             <>
-              <p className="eyebrow">Student portal</p>
-              <h2 className="mt-2 text-3xl text-ink">{mode === "signin" ? "Welcome back." : "Create your account."}</h2>
+              
+              <h2 className="mt-2 text-3xl leading-tight text-ink tracking-normal">{mode === "signin" ? "Welcome, learner." : "Your journey starts here."}</h2>
               <p className="mt-2 text-sm text-ink/60">
-                {mode === "signin" ? "Sign in to view your dashboard." : "Use the email registered with the school office."}
+                {mode === "signin" ? "Welcome back to Daniel's Primary School. Your next chapter starts today." : "Use the email registered with the school office."}
               </p>
 
-              <button
+              <Button
                 type="button"
                 onClick={handleGoogle}
                 disabled={busy}
-                className="mt-6 flex h-11 w-full items-center justify-center gap-3 rounded-full border border-input bg-paper text-sm font-medium text-ink transition hover:bg-secondary disabled:opacity-60"
+                variant="outline"
+                className="mt-6 h-11 w-full gap-3 bg-paper hover:bg-entrance-soft hover:text-entrance"
               >
                 <GoogleMark />
                 Continue with Google
-              </button>
+              </Button>
 
               <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-wider text-sage">
                 <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
@@ -154,22 +132,20 @@ function AuthPage() {
                 <Field label="Password">
                   <input required type="password" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} className={inputCls} placeholder="••••••••" />
                 </Field>
-                <button type="submit" disabled={busy} className="pill-gold h-11 w-full text-sm disabled:opacity-60">
+                <Button type="submit" disabled={busy} className="h-11 w-full">
                   {busy ? "Please wait…" : mode === "signin" ? "Log in" : "Create account"}
-                </button>
+                </Button>
               </form>
 
               <p className="mt-5 text-center text-sm text-ink/60">
                 {mode === "signin" ? "New learner? " : "Already registered? "}
-                <button type="button" onClick={() => setMode(mode === "signin" ? "signup" : "signin")} className="font-semibold text-brand underline-offset-4 hover:underline">
+                <Button type="button" onClick={() => setMode(mode === "signin" ? "signup" : "signin")} variant="link" className="h-auto p-0 font-semibold text-entrance">
                   {mode === "signin" ? "Create an account" : "Sign in"}
-                </button>
+                </Button>
               </p>
             </>
           )}
-        </div>
-      </section>
-    </div>
+    </SignInLayout>
   );
 }
 

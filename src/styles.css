@@ -65,6 +65,9 @@
   --color-sage: var(--sage);
   --color-clay: var(--clay);
   --color-paper: var(--paper);
+  --color-entrance: var(--entrance);
+  --color-entrance-soft: var(--entrance-soft);
+  --color-entrance-foreground: var(--entrance-foreground);
 
   --shadow-card: 0 1px 2px oklch(0.27 0.05 155 / 6%), 0 12px 32px -16px oklch(0.27 0.05 155 / 18%);
 }
@@ -80,6 +83,16 @@
   --sage: oklch(0.65 0.04 155);
   --clay: oklch(0.55 0.14 35);
   --paper: oklch(0.99 0.005 85);
+  --student-entrance: oklch(0.34 0.06 160);
+  --student-entrance-soft: oklch(0.94 0.025 160);
+  --teacher-entrance: oklch(0.43 0.11 245);
+  --teacher-entrance-soft: oklch(0.95 0.02 245);
+  --admin-entrance: oklch(0.40 0.10 20);
+  --admin-entrance-soft: oklch(0.95 0.025 20);
+  --entrance: var(--student-entrance);
+  --entrance-soft: var(--student-entrance-soft);
+  --entrance-foreground: var(--paper);
+  --entrance-overlay: linear-gradient(to top, oklch(0.18 0.025 160 / 95%), oklch(0.18 0.025 160 / 12%) 75%);
 
   --background: var(--cream);
   --foreground: var(--ink);
@@ -114,6 +127,21 @@
   --sidebar-border: var(--border);
   --sidebar-ring: var(--gold);
 }
+
+.sign-in-entrance {
+  --primary: var(--entrance);
+  --primary-foreground: var(--entrance-foreground);
+  --ring: var(--entrance);
+}
+.sign-in-entrance[data-role="teacher"] {
+  --entrance: var(--teacher-entrance);
+  --entrance-soft: var(--teacher-entrance-soft);
+}
+.sign-in-entrance[data-role="administrator"] {
+  --entrance: var(--admin-entrance);
+  --entrance-soft: var(--admin-entrance-soft);
+}
+.entrance-photo-overlay { background: var(--entrance-overlay); }
 
 .dark {
   --background: var(--ink);
